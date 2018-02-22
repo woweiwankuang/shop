@@ -1,0 +1,24 @@
+spring:
+  session:
+    store-type: none
+  datasource:
+    url: jdbc:mysql://localhost:3306/my-demo?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true
+    username: user
+    password: userpass
+    tomcat:
+      validation-query: "select 1"
+      test-on-borrow: true
+      validation-interval: 30000
+      remove-abandoned: true
+      remove-abandoned-timeout: 60
+      log-abandoned: true
+      abandon-when-percentage-full: 80
+      jdbc-interceptors: "ResetAbandonedTimer"
+
+flyway:
+  out-of-order: true
+
+demo:
+  content: "test"
+server:
+  port: 5555
