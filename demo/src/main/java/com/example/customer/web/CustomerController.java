@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -25,7 +26,7 @@ public class CustomerController {
      * @param customer 顾客
      */
     @PostMapping("/customers")
-    public Integer addCustomer(@RequestBody Customer customer) {
+    public Integer addCustomer(@RequestBody @Valid Customer customer) {
         return customerService.addCustomer(customer);
     }
 
