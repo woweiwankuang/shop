@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * 顾客仓储
  */
-public interface CustomerRepository extends JpaRepository<Customer, Long> {
+public interface CustomerRepository extends JpaRepository<Customer, Integer> {
 
     /**
      * 通过姓名模糊查询顾客

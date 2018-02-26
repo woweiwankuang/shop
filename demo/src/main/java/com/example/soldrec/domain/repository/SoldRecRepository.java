@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * 创建原因：销售记录仓储
  */
-public interface SoldRecRepository extends JpaRepository<SoldRec, Long> {
+public interface SoldRecRepository extends JpaRepository<SoldRec, Integer> {
 
     /**
      * 通过顾客id查询
