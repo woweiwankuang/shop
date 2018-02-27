@@ -16,8 +16,8 @@ public interface SoldRecService {
     Integer add(SoldRec soldRec);
 
     /**
-     * 通过用户id查询所有销售记录
-     * @param userIds 用户id
+     * 通过顾客id查询所有销售记录
+     * @param customerIds 用户id
      */
-    List<SoldRec> queryAllSoldRecByUserIds(List<Integer> userIds);
+    List<SoldRec> queryAllSoldRecByCustomerIds(List<Integer> customerIds);
 }
