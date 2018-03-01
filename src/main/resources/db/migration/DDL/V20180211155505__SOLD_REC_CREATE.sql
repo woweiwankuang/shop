@@ -1,8 +1,8 @@
 --
--- table create `solder_rec`
+-- table create `sold_rec`
 --
 
-CREATE TABLE `solder_rec` (
+CREATE TABLE `sold_rec` (
   `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT '主键ID，自增',
   `createTime` BIGINT(20) NOT NULL COMMENT '创建时间',
   `lastModified` BIGINT(20) NOT NULL COMMENT '最近一次修改时间',

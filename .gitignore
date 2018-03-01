@@ -6,6 +6,7 @@ target/
 .DS_Store/
 .DS_Store
 docker/app.jar
-
+out/
+META-INF/
 
 
