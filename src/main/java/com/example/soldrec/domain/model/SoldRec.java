@@ -63,6 +63,11 @@ public class SoldRec extends AbstractEntity{
     /**
      * 是否已经寄出
      */
-    private boolean isSend;
+    private boolean haveSend;
+
+    /**
+     * 快递单号
+     */
+    private String trackingNumber;
 
 }

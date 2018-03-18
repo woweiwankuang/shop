@@ -15,6 +15,7 @@ CREATE TABLE `sold_rec` (
   `postage` int(11) NOT NULL COMMENT '邮费',
   `profit` decimal(5,1) NOT NULL COMMENT '利润',
   `soldTime` BIGINT(20) NOT NULL COMMENT '卖出时间',
-  `isSend` tinyint(1) NOT NULL COMMENT '是否已经寄出',
+  `haveSend` tinyint(1) NOT NULL COMMENT '是否已经寄出',
+  `trackingNumber` VARCHAR(15) COMMENT '快递单号',
   PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='销售记录表';
