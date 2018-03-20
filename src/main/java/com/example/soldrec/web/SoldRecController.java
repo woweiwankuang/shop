@@ -6,6 +6,7 @@ import com.example.soldrec.domain.model.SoldRec;
 import com.example.soldrec.domain.repository.SoldRecRepository;
 import com.example.soldrec.domain.service.SoldRecService;
 import com.example.soldrec.web.dto.SoldRecDTO;
+import com.example.soldrec.web.dto.SoldRecStatistics;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -74,5 +75,18 @@ public class SoldRecController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateSoldRec(@PathVariable Integer id,@RequestBody SoldRec soldRec){
         soldRecRepository.save(soldRec);
+    }
+
+    /**
+     * 统计时间段内的销售情况
+     * @param startTime 开始统计时间
+     * @param endTime 结束统计时间
+     */
+    @PostMapping("/soldRecs/statistics")
+    public SoldRecStatistics extractSoldRecStatistics(@RequestParam Long startTime,@RequestParam Long endTime){
+        double totalPrice = soldRecRepository.sumPriceBySoldTimeBetween(startTime, endTime);
+        double totalCost = soldRecRepository.sumCostBySoldTimeBetween(startTime, endTime);
+        double totalPostage = soldRecRepository.sumPostageBySoldTimeBetween(startTime, endTime);
+        return new SoldRecStatistics(totalPrice,totalCost,totalPostage);
     }
 }
