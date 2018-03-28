@@ -70,4 +70,9 @@ public class SoldRec extends AbstractEntity{
      */
     private String trackingNumber;
 
+    /**
+     * 所属用户id
+     */
+    private int userId;
+
 }

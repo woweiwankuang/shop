@@ -17,5 +17,6 @@ CREATE TABLE `sold_rec` (
   `soldTime` BIGINT(20) NOT NULL COMMENT '卖出时间',
   `haveSend` tinyint(1) NOT NULL COMMENT '是否已经寄出',
   `trackingNumber` VARCHAR(15) COMMENT '快递单号',
+  `userId` int(11) NOT NULL COMMENT '所属用户id',
   PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='销售记录表';

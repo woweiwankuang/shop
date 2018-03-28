@@ -8,6 +8,7 @@ CREATE TABLE `customer` (
   `lastModified` BIGINT(20) NOT NULL COMMENT '最近一次修改时间',
   `realName` VARCHAR(40) NOT NULL COMMENT '用户名称',
   `phoneNum` VARCHAR(11) NOT NULL COMMENT '手机号码',
+  `userId` int(11) NOT NULL COMMENT '所属用户id',
   PRIMARY KEY (`id`),
   INDEX `idx_customer_phone_num` (`phoneNum` ASC)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='顾客表';

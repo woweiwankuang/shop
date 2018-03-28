@@ -47,4 +47,9 @@ public class Customer extends AbstractEntity {
     @Column(name = "address")
     @NotEmpty
     private List<String> addresss;
+
+    /**
+     * 所属用户id
+     */
+    private int userId;
 }

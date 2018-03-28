@@ -8,5 +8,6 @@ target/
 docker/app.jar
 out/
 META-INF/
+classes/
 
 
