@@ -8,4 +8,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface UserRepository extends JpaRepository<User, Integer> {
 
+    /**
+     * 通过用户名查找用户
+     */
+    User findOneByUsername(String username);
+
 }
