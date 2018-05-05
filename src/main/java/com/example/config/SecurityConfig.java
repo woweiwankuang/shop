@@ -1,6 +1,7 @@
 package com.example.config;
 
 import com.example.common.service.CompositeClientDetailsService;
+import com.example.utils.PasswordUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -11,6 +12,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.builders.InMemoryClientDetailsServiceBuilder;
 import org.springframework.security.oauth2.config.annotation.builders.JdbcClientDetailsServiceBuilder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -44,6 +46,21 @@ public class SecurityConfig {
 //        extendedAuthenticationProviders.forEach(auth::authenticationProvider);
 //        auth.userDetailsService(userService).passwordEncoder(passwordEncoder());
 //    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        return new PasswordEncoder() {
+            @Override
+            public String encode(CharSequence charSequence) {
+                return PasswordUtil.encode(charSequence);
+            }
+
+            @Override
+            public boolean matches(CharSequence raw, String encode) {
+                return PasswordUtil.matches(raw, encode);
+            }
+        };
+    }
 
     /**
      * 认证服务的配置

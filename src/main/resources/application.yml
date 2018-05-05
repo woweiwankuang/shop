@@ -25,8 +25,13 @@ flyway:
 
 demo:
   content: "test"
+
 server:
   port: 5555
-security:
-  basic:
-    enabled: false
+
+sky:
+  oauth2:
+    default-access-token-validity-seconds: 43200 #默认12小时
+    web:
+      client-id: web
+
