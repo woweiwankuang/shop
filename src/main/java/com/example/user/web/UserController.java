@@ -3,12 +3,15 @@ package com.example.user.web;
 import com.example.user.domain.model.User;
 import com.example.user.domain.repository.UserRepository;
 import com.example.user.domain.service.UserService;
+import com.example.user.web.dto.CreateUserDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
 
 /**
  * 用户控制层
@@ -22,12 +25,12 @@ public class UserController {
 
     /**
      * 创建用户
-     * @param user 用户
+     * @param createUserDTO 用户创建dto
      */
     @PostMapping("/users")
-    public Integer addUser(@RequestBody User user) {
-        Assert.isTrue(user.getId()==null,"userId must be null" );
-        Assert.isTrue(!userRepository.existsByUsername(user.getUsername()),"user already exist");
+    public Integer addUser(@Valid @RequestBody CreateUserDTO createUserDTO) {
+        User user = createUserDTO.extractUser();
+        Assert.isTrue(!userRepository.existsByUsername(user.getUsername()), "user already exist");
         return userService.addUser(user);
     }
 }

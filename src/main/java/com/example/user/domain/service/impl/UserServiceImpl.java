@@ -8,6 +8,7 @@ import com.example.utils.PasswordUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 /**
  * 用户service
@@ -21,6 +22,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public Integer addUser(User user) {
+        Assert.isTrue(user.getId() == null, "userId must be null");
         user.setPassword(PasswordUtil.encode(user.getPassword()));
         if (user.getId() != null) {
             tokenRevokeService.revoke(user.getUsername());

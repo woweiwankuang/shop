@@ -4,6 +4,7 @@ import com.example.common.domain.Authority;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -25,6 +26,7 @@ import java.util.Set;
 @Data
 @Entity
 @Table(name = "user")
+@NoArgsConstructor
 public class User implements UserDetails {
     /**
      * 帐号id
@@ -68,4 +70,10 @@ public class User implements UserDetails {
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "authority",joinColumns = @JoinColumn(name = "accountId"))
     private Set<Authority> authorities;
+
+    public User(String username, String password, Set<Authority> authorities) {
+        this.username = username;
+        this.password = password;
+        this.authorities = authorities;
+    }
 }
