@@ -27,6 +27,7 @@ public class UserController {
      * 创建用户
      * @param createUserDTO 用户创建dto
      */
+
     @PostMapping("/users")
     public Integer addUser(@Valid @RequestBody CreateUserDTO createUserDTO) {
         User user = createUserDTO.extractUser();

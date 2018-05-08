@@ -68,7 +68,7 @@ public class User implements UserDetails {
      */
     @NotEmpty
     @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "authority",joinColumns = @JoinColumn(name = "accountId"))
+    @CollectionTable(name = "authority",joinColumns = @JoinColumn(name = "userId"))
     private Set<Authority> authorities;
 
     public User(String username, String password, Set<Authority> authorities) {
