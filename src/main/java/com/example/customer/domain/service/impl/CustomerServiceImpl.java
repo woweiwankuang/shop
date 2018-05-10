@@ -24,7 +24,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<Customer> queryCustomersByRealName(String realName){
-        return customerRepository.findAllByRealNameContaining(realName);
+    public List<Customer> queryCustomersByRealName(String realName, int userId) {
+        return customerRepository.findAllByUserIdAndRealNameContaining(userId, realName);
     }
 }

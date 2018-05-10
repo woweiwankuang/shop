@@ -7,9 +7,11 @@ import com.example.soldrec.domain.repository.SoldRecRepository;
 import com.example.soldrec.domain.service.SoldRecService;
 import com.example.soldrec.web.dto.SoldRecDTO;
 import com.example.soldrec.web.dto.SoldRecStatistics;
+import com.example.user.domain.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,7 +42,8 @@ public class SoldRecController {
      * @param soldRec 销售记录
      */
     @PostMapping("/soldRecs")
-    public Integer addSoldRec(@RequestBody SoldRec soldRec) {
+    public Integer addSoldRec(@RequestBody SoldRec soldRec, @AuthenticationPrincipal User user) {
+        soldRec.setUserId(user.getId());
         return soldRecService.add(soldRec);
     }
 
@@ -49,8 +52,8 @@ public class SoldRecController {
      * @param customerIds 用户id
      */
     @GetMapping("/soldRecs")
-    public List<SoldRecDTO> querySoldRec(@RequestParam(required = false) List<Integer> customerIds) {
-        List<SoldRec> soldRecs = soldRecService.queryAllSoldRecByCustomerIds(customerIds);
+    public List<SoldRecDTO> querySoldRec(@RequestParam(required = false) List<Integer> customerIds, @AuthenticationPrincipal User user) {
+        List<SoldRec> soldRecs = soldRecService.queryAllSoldRecByCustomerIds(customerIds, user.getId());
         List<Integer> tmpCustomerIds = soldRecs.stream().map(SoldRec::getCustomerId).collect(Collectors.toList());
         Map<Integer, Customer> customerMap = customerRepository.findAll(tmpCustomerIds).stream().collect(Collectors.toMap(Customer::getId, customer -> customer));
         return soldRecs.stream().map(soldRec -> new SoldRecDTO(soldRec, customerMap.get(soldRec.getCustomerId()))).collect(Collectors.toList());
@@ -61,9 +64,10 @@ public class SoldRecController {
      * @param id 销售记录id
      */
     @GetMapping("/soldRecs/{id}")
-    public SoldRecDTO querySoldRecById(@PathVariable Integer id) {
+    public SoldRecDTO querySoldRecById(@PathVariable Integer id, @AuthenticationPrincipal User user) {
         SoldRec soldRec = soldRecRepository.findOne(id);
         Assert.isTrue(soldRec != null, "不存在该记录");
+        Assert.isTrue(user.getId().equals(soldRec.getUserId()), "没有权限");
         Customer customer = customerRepository.findOne(soldRec.getCustomerId());
         return new SoldRecDTO(soldRec, customer);
     }
@@ -73,7 +77,10 @@ public class SoldRecController {
      */
     @PutMapping("/soldRecs/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateSoldRec(@PathVariable Integer id,@RequestBody SoldRec soldRec){
+    public void updateSoldRec(@PathVariable Integer id, @RequestBody SoldRec soldRec, @AuthenticationPrincipal User user) {
+        SoldRec dbSoldRec = soldRecRepository.findOne(id);
+        Assert.isTrue(user.getId().equals(dbSoldRec.getUserId()), "没有权限");
+        soldRec.setId(id);
         soldRecRepository.save(soldRec);
     }
 
@@ -83,10 +90,10 @@ public class SoldRecController {
      * @param endTime 结束统计时间
      */
     @PostMapping("/soldRecs/statistics")
-    public SoldRecStatistics extractSoldRecStatistics(@RequestParam Long startTime,@RequestParam Long endTime){
-        double totalPrice = soldRecRepository.sumPriceBySoldTimeBetween(startTime, endTime);
-        double totalCost = soldRecRepository.sumCostBySoldTimeBetween(startTime, endTime);
-        double totalPostage = soldRecRepository.sumPostageBySoldTimeBetween(startTime, endTime);
-        return new SoldRecStatistics(totalPrice,totalCost,totalPostage);
+    public SoldRecStatistics extractSoldRecStatistics(@RequestParam Long startTime, @RequestParam Long endTime, @AuthenticationPrincipal User user) {
+        double totalPrice = soldRecRepository.sumPriceByUserIdAndSoldTimeBetween(user.getId(), startTime, endTime);
+        double totalCost = soldRecRepository.sumCostByUserIdAndSoldTimeBetween(user.getId(), startTime, endTime);
+        double totalPostage = soldRecRepository.sumPostageByUserIdAndSoldTimeBetween(user.getId(), startTime, endTime);
+        return new SoldRecStatistics(totalPrice, totalCost, totalPostage);
     }
 }

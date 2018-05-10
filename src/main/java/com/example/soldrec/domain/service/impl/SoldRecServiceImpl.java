@@ -27,10 +27,10 @@ public class SoldRecServiceImpl implements SoldRecService {
     }
 
     @Override
-    public List<SoldRec> queryAllSoldRecByCustomerIds(List<Integer> customerIds) {
+    public List<SoldRec> queryAllSoldRecByCustomerIds(List<Integer> customerIds, int userId) {
         if (CollectionUtils.isEmpty(customerIds)) {
-            return soldRecRepository.findAll(new Sort(Sort.Direction.DESC, "id"));
+            return soldRecRepository.findAllByUserId(userId, new Sort(Sort.Direction.DESC, "id"));
         }
-        return soldRecRepository.findAllByCustomerIdIn(customerIds, new Sort(Sort.Direction.DESC, "id"));
+        return soldRecRepository.findAllByUserIdAndCustomerIdIn(userId, customerIds, new Sort(Sort.Direction.DESC, "id"));
     }
 }

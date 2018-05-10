@@ -13,26 +13,33 @@ import java.util.List;
 public interface SoldRecRepository extends JpaRepository<SoldRec, Integer> {
 
     /**
+     * 查询权限下的所有顾客
+     * @param userId 当前用户id
+     */
+    List<SoldRec> findAllByUserId(int userId, Sort sort);
+
+    /**
      * 通过顾客id查询
      * @param customerIds 顾客id
+     * @param userId 当前用户id
      */
-    List<SoldRec> findAllByCustomerIdIn(List<Integer> customerIds, Sort sort);
+    List<SoldRec> findAllByUserIdAndCustomerIdIn(int userId, List<Integer> customerIds, Sort sort);
 
     /**
      * 统计时间段内的销售总额
      */
-    @Query(value = "select  sum(price) from sold_rec where soldTime between ?1 and ?2", nativeQuery = true)
-    double sumPriceBySoldTimeBetween(Long startTime, Long endTime);
+    @Query(value = "select  sum(price) from sold_rec where userId = ?1 and soldTime between ?2 and ?3", nativeQuery = true)
+    double sumPriceByUserIdAndSoldTimeBetween(int userId, Long startTime, Long endTime);
 
     /**
      * 统计时间段内的成本总额
      */
-    @Query(value = "select  sum(cost) from sold_rec where soldTime between ?1 and ?2", nativeQuery = true)
-    double sumCostBySoldTimeBetween(Long startTime, Long endTime);
+    @Query(value = "select  sum(cost) from sold_rec where userId = ?1 and soldTime between ?2 and ?3", nativeQuery = true)
+    double sumCostByUserIdAndSoldTimeBetween(int userId, Long startTime, Long endTime);
 
     /**
      * 统计时间段内的邮费总额
      */
-    @Query(value = "select  sum(postage) from sold_rec where soldTime between ?1 and ?2", nativeQuery = true)
-    double sumPostageBySoldTimeBetween(Long startTime, Long endTime);
+    @Query(value = "select  sum(postage) from sold_rec where userId = ?1 and soldTime between ?2 and ?3", nativeQuery = true)
+    double sumPostageByUserIdAndSoldTimeBetween(int userId, Long startTime, Long endTime);
 }

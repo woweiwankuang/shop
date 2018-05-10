@@ -12,7 +12,8 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
 
     /**
      * 通过姓名模糊查询顾客
+     * @param userId 所属用户id
      * @param realName 姓名
      */
-    List<Customer> findAllByRealNameContaining(String realName);
+    List<Customer> findAllByUserIdAndRealNameContaining(int userId, String realName);
 }

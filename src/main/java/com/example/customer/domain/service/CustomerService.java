@@ -19,5 +19,5 @@ public interface CustomerService {
      * 通过用户姓名模糊查询
      * @param realName 姓名
      */
-    List<Customer> queryCustomersByRealName(String realName);
+    List<Customer> queryCustomersByRealName(String realName, int userId);
 }

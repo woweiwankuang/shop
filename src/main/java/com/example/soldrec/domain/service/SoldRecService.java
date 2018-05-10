@@ -19,5 +19,5 @@ public interface SoldRecService {
      * 通过顾客id查询所有销售记录
      * @param customerIds 用户id
      */
-    List<SoldRec> queryAllSoldRecByCustomerIds(List<Integer> customerIds);
+    List<SoldRec> queryAllSoldRecByCustomerIds(List<Integer> customerIds, int userId);
 }
