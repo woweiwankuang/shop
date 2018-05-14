@@ -34,4 +34,5 @@ public class UserController {
         Assert.isTrue(!userRepository.existsByUsername(user.getUsername()), "user already exist");
         return userService.addUser(user);
     }
+    
 }
