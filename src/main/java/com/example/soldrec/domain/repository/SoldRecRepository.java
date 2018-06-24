@@ -19,6 +19,14 @@ public interface SoldRecRepository extends JpaRepository<SoldRec, Integer> {
     List<SoldRec> findAllByUserId(int userId, Sort sort);
 
     /**
+     * 通过时间查询
+     * @param userId 当前用户id
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     */
+    List<SoldRec> findAllByUserIdAndSoldTimeBetween(int userId, Long startTime, Long endTime, Sort sort);
+
+    /**
      * 通过顾客id查询
      * @param customerIds 顾客id
      * @param userId 当前用户id

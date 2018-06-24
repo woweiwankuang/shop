@@ -9,7 +9,7 @@ import com.example.soldrec.web.dto.SoldRecDTO;
 import com.example.soldrec.web.dto.SoldRecStatistics;
 import com.example.user.domain.model.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.util.Assert;
@@ -24,13 +24,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
  * 销售记录控制层
  */
 @RestController
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequiredArgsConstructor
 public class SoldRecController {
 
     private final SoldRecService soldRecService;
@@ -51,10 +52,24 @@ public class SoldRecController {
      * 通过顾客姓名查询销售记录
      * @param customerIds 用户id
      */
-    @GetMapping("/soldRecs")
+    @GetMapping(value = "/soldRecs", params = "type=customer")
     public List<SoldRecDTO> querySoldRec(@RequestParam(required = false) List<Integer> customerIds, @AuthenticationPrincipal User user) {
         List<SoldRec> soldRecs = soldRecService.queryAllSoldRecByCustomerIds(customerIds, user.getId());
-        List<Integer> tmpCustomerIds = soldRecs.stream().map(SoldRec::getCustomerId).collect(Collectors.toList());
+        return change2DTO(soldRecs);
+    }
+
+    /**
+     * 通过时间段查询销售记录
+     */
+    @GetMapping(value = "/soldRecs", params = "type=time")
+    public List<SoldRecDTO> querySoldRec(@RequestParam Long startTime, @RequestParam Long endTime, @AuthenticationPrincipal User user) {
+        List<SoldRec> soldRecs = soldRecRepository.findAllByUserIdAndSoldTimeBetween(user.getId(), startTime, endTime, new Sort(Sort.Direction.DESC, "id"));
+        return change2DTO(soldRecs);
+    }
+
+    //将list<soldRec> -> List<SoldRecDTO>
+    private List<SoldRecDTO> change2DTO(List<SoldRec> soldRecs){
+        Set<Integer> tmpCustomerIds = soldRecs.stream().map(SoldRec::getCustomerId).collect(Collectors.toSet());
         Map<Integer, Customer> customerMap = customerRepository.findAll(tmpCustomerIds).stream().collect(Collectors.toMap(Customer::getId, customer -> customer));
         return soldRecs.stream().map(soldRec -> new SoldRecDTO(soldRec, customerMap.get(soldRec.getCustomerId()))).collect(Collectors.toList());
     }
