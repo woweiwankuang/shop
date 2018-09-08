@@ -7,12 +7,18 @@ import com.example.soldrec.domain.repository.SoldRecRepository;
 import com.example.soldrec.domain.service.SoldRecService;
 import com.example.soldrec.web.dto.SoldRecDTO;
 import com.example.soldrec.web.dto.SoldRecStatistics;
+import com.example.soldrec.web.dto.TrackingNumberDTO;
 import com.example.user.domain.model.User;
+import com.example.userbindinfo.domain.model.UserBindInfo;
+import com.example.userbindinfo.domain.repository.UserBindInfoRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,6 +43,7 @@ public class SoldRecController {
     private final SoldRecService soldRecService;
     private final SoldRecRepository soldRecRepository;
     private final CustomerRepository customerRepository;
+    private final UserBindInfoRepository userBindInfoRepository;
 
     /**
      * 添加销售记录
@@ -110,5 +117,21 @@ public class SoldRecController {
         double totalCost = soldRecRepository.sumCostByUserIdAndSoldTimeBetween(user.getId(), startTime, endTime);
         double totalPostage = soldRecRepository.sumPostageByUserIdAndSoldTimeBetween(user.getId(), startTime, endTime);
         return new SoldRecStatistics(totalPrice, totalCost, totalPostage);
+    }
+
+    /**
+     * 通过绑定码和手机号查询快递单号
+     * @param bindCode 绑定码
+     * @param phoneNum 手机号
+     */
+    @PostMapping(value = "/trackingNumbers", params = "type=bindCode")
+    public Page<TrackingNumberDTO> getTrackingNumberByBindCode(@RequestParam String bindCode, @RequestParam String phoneNum, Pageable pageable) {
+        UserBindInfo userBindInfo = userBindInfoRepository.findOneByCode(bindCode);
+        Assert.isTrue(userBindInfo != null, "绑定码错误");
+        List<Customer> customers = customerRepository.findAllByPhoneNum(phoneNum);
+        Assert.isTrue(!CollectionUtils.isEmpty(customers), "手机号错误");
+        Set<Integer> customerIds = customers.stream().map(Customer::getId).collect(Collectors.toSet());
+        Page<SoldRec> soldRecs = soldRecRepository.findAllByUserIdAndTrackingNumberNotNullAndCustomerIdIn(userBindInfo.getUserId(), customerIds, pageable);
+        return soldRecs.map(soldRec -> new TrackingNumberDTO(soldRec.getSoldTime(), soldRec.getProductName(), soldRec.getTrackingNumber()));
     }
 }

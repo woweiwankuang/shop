@@ -1,6 +1,8 @@
 package com.example.soldrec.domain.repository;
 
 import com.example.soldrec.domain.model.SoldRec;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -50,4 +52,11 @@ public interface SoldRecRepository extends JpaRepository<SoldRec, Integer> {
      */
     @Query(value = "select  COALESCE(sum(postage),0) from sold_rec where userId = ?1 and soldTime between ?2 and ?3", nativeQuery = true)
     double sumPostageByUserIdAndSoldTimeBetween(int userId, Long startTime, Long endTime);
+
+    /**
+     * 通过卖家用户ID和买家用户ID查询有单号的记录
+     * @param userId 卖家id
+     * @param customerIds 买家id
+     */
+    Page<SoldRec> findAllByUserIdAndTrackingNumberNotNullAndCustomerIdIn(Integer userId, Iterable<Integer> customerIds, Pageable pageable);
 }
