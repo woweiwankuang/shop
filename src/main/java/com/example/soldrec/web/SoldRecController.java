@@ -124,7 +124,7 @@ public class SoldRecController {
      * @param bindCode 绑定码
      * @param phoneNum 手机号
      */
-    @PostMapping(value = "/trackingNumbers", params = "type=bindCode")
+    @GetMapping(value = "/trackingNumbers", params = "type=bindCode")
     public Page<TrackingNumberDTO> getTrackingNumberByBindCode(@RequestParam String bindCode, @RequestParam String phoneNum, Pageable pageable) {
         UserBindInfo userBindInfo = userBindInfoRepository.findOneByCode(bindCode);
         Assert.isTrue(userBindInfo != null, "绑定码错误");
