@@ -116,6 +116,7 @@ public class SecurityConfig {
             http.authorizeRequests()
                     .antMatchers(HttpMethod.POST,"/users").permitAll()
                     .antMatchers(HttpMethod.GET,"/trackingNumbers").permitAll()
+                    .antMatchers(HttpMethod.POST,"/expressSearchs").permitAll()
                     .anyRequest().authenticated();
         }
     }
