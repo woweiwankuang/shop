@@ -5,7 +5,6 @@ import com.example.customer.domain.repository.CustomerRepository;
 import com.example.customer.domain.service.CustomerService;
 import com.example.user.domain.model.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.util.Assert;
@@ -24,7 +23,7 @@ import java.util.List;
  * 顾客控制层
  */
 @RestController
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequiredArgsConstructor
 public class CustomerController {
 
     private final CustomerService customerService;
