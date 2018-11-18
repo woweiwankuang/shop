@@ -2,6 +2,9 @@ package com.example.stock.web;
 
 import com.example.stock.domain.model.Stock;
 import com.example.stock.domain.repository.StockRepository;
+import com.example.stock.web.dto.StockDTO;
+import com.example.supplier.domain.model.Supplier;
+import com.example.supplier.domain.repository.SupplierRepository;
 import com.example.user.domain.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,6 +22,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 库存控制层
@@ -28,6 +34,7 @@ import java.util.List;
 public class StockController {
 
     private final StockRepository stockRepository;
+    private final SupplierRepository supplierRepository;
 
     /**
      * 添加库存
@@ -58,11 +65,12 @@ public class StockController {
      * @param id 库存id
      */
     @GetMapping("/stocks/{id}")
-    public Stock queryStockById(@PathVariable Integer id, @AuthenticationPrincipal User user) {
+    public StockDTO queryStockById(@PathVariable Integer id, @AuthenticationPrincipal User user) {
         Stock stock = stockRepository.findOne(id);
         Assert.isTrue(stock != null, "不存在该库存");
         Assert.isTrue(user.getId().equals(stock.getUserId()), "没有权限");
-        return stock;
+        Supplier supplier = supplierRepository.findOne(stock.getSupplierId());
+        return new StockDTO(stock, supplier);
     }
 
     /**
@@ -71,8 +79,13 @@ public class StockController {
      * @param endTime 结束统计时间
      */
     @GetMapping(value = "/stocks", params = "type=time")
-    public List<Stock> queryStocksByTime(@RequestParam Long startTime, @RequestParam Long endTime, @AuthenticationPrincipal User user) {
-        return stockRepository.findAllByUserIdAndAndCreateTimeBetween(user.getId(), startTime, endTime);
+    public List<StockDTO> queryStocksByTime(@RequestParam Long startTime, @RequestParam Long endTime, @AuthenticationPrincipal User user) {
+        List<Stock> stocks = stockRepository.findAllByUserIdAndAndCreateTimeBetween(user.getId(), startTime, endTime);
+        //获取供应商信息
+        Set<Integer> supplierIds = stocks.stream().map(Stock::getSupplierId).collect(Collectors.toSet());
+        List<Supplier> suppliers = supplierRepository.findAll(supplierIds);
+        Map<Integer, Supplier> supplierMap = suppliers.stream().collect(Collectors.toMap(Supplier::getId, s -> s));
+        return stocks.stream().map(stock -> new StockDTO(stock, supplierMap.get(stock.getSupplierId())) ).collect(Collectors.toList());
     }
 
     /**

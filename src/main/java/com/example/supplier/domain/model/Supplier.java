@@ -1,4 +1,4 @@
-package com.example.stock.domain.model;
+package com.example.supplier.domain.model;
 
 import com.example.common.domain.AbstractEntity;
 import lombok.Data;
@@ -8,37 +8,28 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 /**
- * 库存
+ * 供应商
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
-@Table(name = "stock")
-public class Stock extends AbstractEntity {
+@Table(name = "supplier")
+public class Supplier extends AbstractEntity {
+
     /**
      * 名称
      */
     private String name;
 
     /**
-     * 数量
+     * 手机号
      */
-    private int num;
+    private String phoneNum;
 
     /**
-     * 总价
+     * 备注
      */
-    private double price;
-
-    /**
-     * 规格
-     */
-    private String specification;
-
-    /**
-     * 供应商id
-     */
-    private int supplierId;
+    private String remark;
 
     /**
      * 所属用户id
