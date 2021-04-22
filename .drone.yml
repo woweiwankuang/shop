@@ -29,6 +29,7 @@ steps:
         path: /var/run/docker.sock
     commands:
       - cd context
+      - ls
       - docker build -t shop-server:1.0 .
     when:
       branch:
