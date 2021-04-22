@@ -15,6 +15,7 @@ steps:
       - mvn clean install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
       - mkdir context
       - mv target/shop-0.0.1-SNAPSHOT.jar context/app.jar
+      - mv Dockerfile context/Dockerfile
     when:
       branch:
         - master
@@ -23,14 +24,12 @@ steps:
 
   - name: push-docker
     image: plugins/docker
-    settings:
-      registry: 172.18.0.1:5000
-      repo: shop-server
-      tag: 1.0
-      context: context
     volumes:
-      - name: docker-image
-        path: /var/lib/docker
+      - name: docker
+        path: /var/run/docker.sock
+    commands:
+      - cd context
+      - docker build -t shop-server:1.0 .
     when:
       branch:
         - master
@@ -44,3 +43,6 @@ volumes:
   - name: app-config
     host:
       path: /root/app-config
+  - name: docker
+    host:
+      path: /var/run/docker.sock
