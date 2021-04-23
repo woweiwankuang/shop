@@ -22,15 +22,15 @@ steps:
       event:
         - push
 
-  - name: push-docker
+  - name: deploy
     image: plugins/docker
     volumes:
       - name: docker
         path: /var/run/docker.sock
     commands:
       - cd context
-      - docker stop shop-server || echo 'no such container'
-      - docker rmi shop-server:1.0 || echo 'no such image'
+      - docker stop shop-server || true
+      - docker rmi shop-server:1.0 || true
       - docker build -t shop-server:1.0 .
       - docker run -d -p 5555:5555 --name shop-server --restart always shop-server:1.0
     when:
