@@ -76,4 +76,9 @@ public class User implements UserDetails {
         this.password = password;
         this.authorities = authorities;
     }
+
+    //清除密码
+    public void clearPassword() {
+        this.password = null;
+    }
 }

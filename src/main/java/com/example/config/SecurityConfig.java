@@ -24,6 +24,7 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.client.InMemoryClientDetailsService;
 import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
+import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
 
@@ -74,6 +75,7 @@ public class SecurityConfig {
         private final AuthenticationManager authenticationManager;
         private final InMemoryClientDetailsServiceBuilder inMemoryClientDetailsServiceBuilder;
         private final JdbcClientDetailsServiceBuilder jdbcClientDetailsServiceBuilder;
+        private final TokenEnhancer tokenEnhancer;
 
         /**
          * 用来配置客户端详情服务（ClientDetailsService），客户端详情信息在这里进行初始化，
@@ -89,7 +91,11 @@ public class SecurityConfig {
          */
         @Override
         public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
-            endpoints.authenticationManager(authenticationManager).userDetailsService(userService).tokenStore(tokenStore).approvalStoreDisabled();
+            endpoints.authenticationManager(authenticationManager)
+                    .userDetailsService(userService)
+                    .tokenStore(tokenStore)
+                    .tokenEnhancer(tokenEnhancer)
+                    .approvalStoreDisabled();
         }
 
         /**
@@ -127,6 +133,7 @@ public class SecurityConfig {
                     .antMatchers(HttpMethod.POST,"/users").permitAll()
                     .antMatchers(HttpMethod.GET,"/trackingNumbers").permitAll()
                     .antMatchers(HttpMethod.POST,"/expressSearchs").permitAll()
+                    .antMatchers(HttpMethod.GET,"/test").permitAll()
                     .anyRequest().authenticated();
         }
     }
