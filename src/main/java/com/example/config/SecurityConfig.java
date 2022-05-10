@@ -63,6 +63,11 @@ public class SecurityConfig {
         };
     }
 
+    @Bean
+    public TokenEnhancer tokenEnhancer() {
+        return new MyTokenEnhancer();
+    }
+
     /**
      * 认证服务的配置
      */
@@ -134,6 +139,7 @@ public class SecurityConfig {
                     .antMatchers(HttpMethod.GET,"/trackingNumbers").permitAll()
                     .antMatchers(HttpMethod.POST,"/expressSearchs").permitAll()
                     .antMatchers(HttpMethod.GET,"/test").permitAll()
+                    .antMatchers(HttpMethod.GET,"/oss/**").permitAll()
                     .anyRequest().authenticated();
         }
     }

@@ -29,6 +29,12 @@ demo:
 server:
   port: 5555
 
+minio:
+  endpoint: http://1.116.86.20:9001
+  key:
+    access: shop-user
+    secret: ph57xCZvfPIr62h4QRofBDaaKwwLps8CVAx33UQ
+
 sky:
   oauth2:
     default-access-token-validity-seconds: 43200 #默认12小时
