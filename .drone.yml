@@ -14,8 +14,8 @@ steps:
       - cp -f /root/app-config/application.yml  src/main/resources/application.yml
       - mvn clean install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
       - mkdir context
+      - mv docker-entrypoint.sh context/docker-entrypoint.sh
       - mv target/shop-0.0.1-SNAPSHOT.jar context/app.jar
-      - mv Dockerfile context/Dockerfile
     when:
       branch:
         - master
