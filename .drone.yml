@@ -22,18 +22,33 @@ steps:
       event:
         - push
 
+  - name: push-docker
+    image: plugins/docker
+    settings:
+      mirror: https://docker.mirrors.ustc.edu.cn
+      registry: registry.cn-qingdao.aliyuncs.com
+      repo: registry.cn-qingdao.aliyuncs.com/sky_55/shop-server
+      tag: ${DRONE_BRANCH}-${DRONE_BUILD_NUMBER}
+      context: context
+      password:
+        from_secret: docker_password
+      username:
+        from_secret: docker_username
+    when:
+      branch:
+        - master
+      event:
+        - push
+
   - name: deploy
     image: plugins/docker
     volumes:
       - name: docker
         path: /var/run/docker.sock
     commands:
-      - cd context
       - docker stop shop-server || true
       - docker rm shop-server || true
-      - docker rmi shop-server:1.0 || true
-      - docker build -t shop-server:1.0 .
-      - docker run -d -p 5555:5555 --name shop-server --restart always shop-server:1.0
+      - docker run -d -p 5555:5555 --name shop-server --restart always registry.cn-qingdao.aliyuncs.com/sky_55/shop-server:${DRONE_BRANCH}-${DRONE_BUILD_NUMBER}
     when:
       branch:
         - master
