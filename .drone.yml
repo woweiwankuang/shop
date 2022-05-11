@@ -4,7 +4,7 @@ name: shop
 
 steps:
   - name: build
-    image: maven:3-jdk-8
+    image: maven:3-alpine
     volumes:
       - name: maven-repo
         path: /root/.m2
