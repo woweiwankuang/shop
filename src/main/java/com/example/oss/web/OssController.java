@@ -3,7 +3,6 @@ package com.example.oss.web;
 import com.example.oss.domain.model.Base64File;
 import com.example.oss.domain.service.MinioOssService;
 import com.example.utils.IoUtils;
-import com.sun.javaws.exceptions.InvalidArgumentException;
 import io.minio.ObjectStat;
 import io.minio.errors.ErrorResponseException;
 import io.minio.errors.InsufficientDataException;
@@ -77,7 +76,7 @@ public class OssController {
      */
     @PostMapping("/upload-b64")
     public String putObject(@RequestBody Base64File base64File,
-                                @RequestParam("bucketName") String bucketName) throws IOException, XmlPullParserException, NoSuchAlgorithmException, RegionConflictException, InvalidKeyException, InvalidArgumentException, ErrorResponseException, NoResponseException, InvalidBucketNameException, InsufficientDataException, InternalException, io.minio.errors.InternalException, io.minio.errors.InvalidArgumentException {
+                                @RequestParam("bucketName") String bucketName) throws IOException, XmlPullParserException, NoSuchAlgorithmException, RegionConflictException, InvalidKeyException, ErrorResponseException, NoResponseException, InvalidBucketNameException, InsufficientDataException, InternalException, io.minio.errors.InternalException, io.minio.errors.InvalidArgumentException {
         Assert.hasText(base64File.getBody(), "文件为空！");
         Assert.hasText(base64File.getFilename(), "原始文件名为空！");
         Assert.hasText(base64File.getContentType(), "Content Type为空！");
@@ -99,7 +98,7 @@ public class OssController {
      * 下载对象
      */
     @GetMapping("/**")
-    public void getObject(HttpServletRequest request, HttpServletResponse response) throws IOException, XmlPullParserException, NoSuchAlgorithmException, InvalidKeyException, InvalidArgumentException, ErrorResponseException, NoResponseException, InvalidBucketNameException, InsufficientDataException, InternalException, io.minio.errors.InternalException, io.minio.errors.InvalidArgumentException {
+    public void getObject(HttpServletRequest request, HttpServletResponse response) throws IOException, XmlPullParserException, NoSuchAlgorithmException, InvalidKeyException, ErrorResponseException, NoResponseException, InvalidBucketNameException, InsufficientDataException, InternalException, io.minio.errors.InternalException, io.minio.errors.InvalidArgumentException {
         String path = URLDecoder.decode(request.getRequestURI(), "utf8");
 
         String[] strings = path.split("/");
