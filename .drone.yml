@@ -48,7 +48,13 @@ steps:
     commands:
       - docker stop shop-server || true
       - docker rm shop-server || true
+      - docker login -u $USERNAME -p $PASSWORD registry.cn-qingdao.aliyuncs.com
       - docker run -d -p 5555:5555 --name shop-server --restart always registry.cn-qingdao.aliyuncs.com/sky_55/shop-server:${DRONE_BRANCH}-${DRONE_BUILD_NUMBER}
+    environment:
+      USERNAME:
+        from_secret: docker_username
+      PASSWORD:
+        from_secret: docker_password
     when:
       branch:
         - master
